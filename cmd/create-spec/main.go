@@ -440,11 +440,6 @@ func generateBootConfig(debug, debugInit bool, imageConfigPath, runtimeConfigPat
 				Dst:    "/mnt",
 			},
 			{
-				FSType: "tmpfs",
-				Src:    "tmpfs",
-				Dst:    "/lib",
-			},
-			{
 				FSType: "cgroup2",
 				Src:    "none",
 				Dst:    "/sys/fs/cgroup",
