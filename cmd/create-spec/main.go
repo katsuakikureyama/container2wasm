@@ -325,10 +325,10 @@ func generateSpec(config spec.Image, rootfs string) (_ *specs.Spec, err error) {
 		ctdoci.WithEnv(ic.Env),
 		ctdoci.WithTTY,           // TODO: make it configurable
 		ctdoci.WithNewPrivileges, // TODO: make it configurable
-		//ctdoci.WithDefaultUnixDevices,
+		ctdoci.WithDefaultUnixDevices,
 		ctdoci.WithAddedCapabilities([]string{"CAP_SYS_ADMIN", "CAP_NET_ADMIN"}),
-		//ctdoci.WithAllKnownCapabilities,
-		//ctdoci.WithAllDevicesAllowed 
+		ctdoci.WithAllKnownCapabilities,
+		ctdoci.WithAllDevicesAllowed ,
 		
 	)
 	if err != nil {
