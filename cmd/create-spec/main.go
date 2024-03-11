@@ -214,7 +214,7 @@ func isContainerManifest(manifest ocispec.Manifest) bool {
 }
 
 func unpackDocker(ctx context.Context, imgDir string, platform *spec.Platform, rootfs string) (io.Reader, error) {
-	fmt.Println("Trying to unpack image as a docker image")
+	fmt.Println("Trying to unpack image as a docker image -- ")
 	if rootfs == "" {
 		return nil, fmt.Errorf("specify rootfs")
 	}
@@ -325,6 +325,11 @@ func generateSpec(config spec.Image, rootfs string) (_ *specs.Spec, err error) {
 		ctdoci.WithEnv(ic.Env),
 		ctdoci.WithTTY,           // TODO: make it configurable
 		ctdoci.WithNewPrivileges, // TODO: make it configurable
+		ctdoci.WithDefaultUnixDevices,
+		ctdoci.WithAddedCapabilities([]string{"CAP_SYS_ADMIN", "CAP_NET_ADMIN"}),
+		ctdoci.WithAllKnownCapabilities,
+		ctdoci.WithAllDevicesAllowed 
+		
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate spec: %w", err)
@@ -433,6 +438,11 @@ func generateBootConfig(debug, debugInit bool, imageConfigPath, runtimeConfigPat
 				FSType: "tmpfs",
 				Src:    "tmpfs",
 				Dst:    "/mnt",
+			},
+			{
+				FSType: "tmpfs",
+				Src:    "tmpfs",
+				Dst:    "/lib",
 			},
 			{
 				FSType: "cgroup2",

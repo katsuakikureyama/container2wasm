@@ -23,7 +23,7 @@ ARG JS_OUTPUT_NAME=out # for emscripten; must not include "."
 ARG OPTIMIZATION_MODE=wizer # "wizer" or "native"
 # ARG OPTIMIZATION_MODE=native
 
-ARG SOURCE_REPO=https://github.com/ktock/container2wasm
+ARG SOURCE_REPO=https://github.com/katsuakikureyama/container2wasm
 ARG SOURCE_REPO_VERSION=v0.6.2
 
 FROM scratch AS oci-image-src
