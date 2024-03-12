@@ -445,7 +445,7 @@ func generateBootConfig(debug, debugInit bool, imageConfigPath, runtimeConfigPat
 				Dst:    "/mnt",
 			},{
 			  FSType: "tmpfs",
-    		Src:    "/lib",
+    		Src:    "lib",
 		    Dst:    "/lib",
     		}, //Options: []string{"rbind", "ro"},
 			{
