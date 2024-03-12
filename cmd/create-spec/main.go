@@ -83,7 +83,7 @@ func main() {
 }
 
 func unpack(ctx context.Context, imgDir string, platform *spec.Platform, rootfs string) (io.Reader, error) {
-	fmt.Println("Trying to unpack image as an OCI image")
+	fmt.Println("Trying to unpack image as an OCI image -- ")
 	if rootfs == "" {
 		return nil, fmt.Errorf("specify rootfs")
 	}
@@ -214,7 +214,7 @@ func isContainerManifest(manifest ocispec.Manifest) bool {
 }
 
 func unpackDocker(ctx context.Context, imgDir string, platform *spec.Platform, rootfs string) (io.Reader, error) {
-	fmt.Println("Trying to unpack image as a docker image -- ")
+	fmt.Println("Trying to unpack image as a docker image")
 	if rootfs == "" {
 		return nil, fmt.Errorf("specify rootfs")
 	}
@@ -319,16 +319,21 @@ func generateSpec(config spec.Image, rootfs string) (_ *specs.Spec, err error) {
 	if config.Architecture == "amd64" {
 		p = "linux/amd64"
 	}
+	// fmt.Println("Trying to set the OCI configuration")
 	s, err := ctdoci.GenerateSpecWithPlatform(ctdCtx, nil, p, &ctdcontainers.Container{},
 		ctdoci.WithHostNamespace(specs.NetworkNamespace),
 		ctdoci.WithoutRunMount,
 		ctdoci.WithEnv(ic.Env),
 		ctdoci.WithTTY,           // TODO: make it configurable
 		ctdoci.WithNewPrivileges, // TODO: make it configurable
-		ctdoci.WithDefaultUnixDevices,
+		# ctdoci.WithDefaultUnixDevices
 		ctdoci.WithAddedCapabilities([]string{"CAP_SYS_ADMIN", "CAP_NET_ADMIN"}),
 		ctdoci.WithAllKnownCapabilities,
-		ctdoci.WithAllDevicesAllowed ,
+		ctdoci.WithAllDevicesAllowed 
+		# ctdoci.WithParentCgroupDevices
+		# ctdoci.WithWriteableSysfs 
+		//a,
+	//	ctdoci.WithPrivileged
 		
 	)
 	if err != nil {
@@ -438,7 +443,11 @@ func generateBootConfig(debug, debugInit bool, imageConfigPath, runtimeConfigPat
 				FSType: "tmpfs",
 				Src:    "tmpfs",
 				Dst:    "/mnt",
-			},
+			},{
+			  FSType: "tmpfs",
+    		Src:    "/lib",
+		    Dst:    "/lib",
+    		}, //Options: []string{"rbind", "ro"},
 			{
 				FSType: "cgroup2",
 				Src:    "none",
